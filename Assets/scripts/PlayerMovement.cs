@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
-
+    public float climbSpeed;
     public float groundDrag;
 
     [Header("Jumping")]
@@ -28,12 +28,15 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
+
+    [Header("Refrences")]
+    public Climbing climbingScript;
 
     public Transform orientation;
 
@@ -47,11 +50,20 @@ public class PlayerMovement : MonoBehaviour
     public MovementState state;
     public enum MovementState
     {
+        freeze,
+        unlimited,
         walking,
         sprinting,
+        climbing,
         crouching,
         air
     }
+
+    public bool freeze;
+    public bool unlimited;
+    public bool climbing;
+
+    public bool restricted;
 
     private void Start()
     {
@@ -63,8 +75,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+
         //ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        float play = playerHeight * 0.5f + 0.2f;
+        grounded = Physics.Raycast(transform.position, Vector3.down, play, whatIsGround);
+        Debug.DrawRay(transform.position, Vector3.down, Color.red, play);
 
         MyInput();
         SpeedControl();
@@ -77,6 +92,11 @@ public class PlayerMovement : MonoBehaviour
             rb.linearDamping = 0f;
 
         Debug.Log(moveSpeed);
+
+        if(state != MovementState.walking)
+        {
+            Debug.Log(state);
+        }
     }
 
     private void FixedUpdate()
@@ -114,6 +134,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
+        if(freeze)
+        {
+            state = MovementState.freeze;
+            rb.linearVelocity = Vector3.zero;
+
+        }
+
+        else if (unlimited)
+        {
+            state = MovementState.unlimited;
+            moveSpeed = sprintSpeed;
+            return;
+        }
+
+        //climbing
+        if(climbing)
+        {
+            state = MovementState.climbing;
+            moveSpeed = climbSpeed;
+        }
+
         //Crouching
         if(Input.GetKey(crouchKey))
         {
@@ -144,6 +185,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        if (restricted) return;
+
+        if (climbingScript.exitingWall) return;
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         //on slope
