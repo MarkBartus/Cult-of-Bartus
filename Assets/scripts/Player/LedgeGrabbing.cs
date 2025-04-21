@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LedgeGrabbing : MonoBehaviour
@@ -7,6 +8,8 @@ public class LedgeGrabbing : MonoBehaviour
     public Transform orientation;
     public Transform cam;
     public Rigidbody rb;
+
+ 
 
     [Header("Ledge Grabbing")]
     public float moveToLedgeSpeed;
@@ -71,8 +74,10 @@ public class LedgeGrabbing : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position + cam.forward *  ledgeDetectionLength, ledgeSphereCastRadius);
     }
+
 
     private void LedgeDetection()
     {
@@ -84,6 +89,7 @@ public class LedgeGrabbing : MonoBehaviour
 
         if (ledgeHit.transform == lastLedge) return;
 
+        //ADD KEY TO HOLD
         if (distanceToLedge < maxLedgeGrabDistance && !holding) EnterLedgeHold();
     }
 
@@ -96,7 +102,8 @@ public class LedgeGrabbing : MonoBehaviour
 
     private void DelayedJumpForce()
     {
-        cam.transform.forward = cam.transform.forward * 14f;
+        cam.transform.forward = cam.transform.forward * ledgeJumpForwardForce;
+;
 
         Vector3 forceToAdd = cam.transform.forward + orientation.up * ledgeJumpUpwardForce;
         rb.linearVelocity = Vector3.zero;
@@ -157,7 +164,7 @@ public class LedgeGrabbing : MonoBehaviour
         rb.useGravity = true;
 
         StopAllCoroutines();
-        Invoke(nameof(ResetLastLedge), 1.8f);
+        Invoke(nameof(ResetLastLedge), 2f);
     }
 
     private void ResetLastLedge()
