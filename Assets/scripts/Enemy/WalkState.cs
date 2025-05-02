@@ -21,6 +21,7 @@ namespace Enemy
             Debug.Log("walk");           
             enemy.nav.speed = 3.5f;
             enemy.aggressive = false;
+            
         }
 
         public override void Exit()
@@ -53,8 +54,10 @@ namespace Enemy
                     return;
                 }
                 Debug.Log("finding path");
+                enemy.anim.Play("walk");
                 enemy.nav.destination = enemy.points[enemy.desPoint].position;
                 enemy.desPoint = (enemy.desPoint + 1) % enemy.points.Length;
+                
             }
 
         }

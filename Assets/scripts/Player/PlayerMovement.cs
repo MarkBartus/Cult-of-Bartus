@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Refrences")]
     public Climbing climbingScript;
-
+    
     public Transform orientation;
 
     float horizontalInput;
@@ -56,7 +56,8 @@ public class PlayerMovement : MonoBehaviour
         sprinting,
         climbing,
         crouching,
-        air
+        air,
+        attack
     }
 
     public bool freeze;
@@ -130,6 +131,16 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && grounded)
+        {
+            Attacking();
+        }
+    }
+
+    public void Attacking()
+    {
+
     }
 
     private void StateHandler()
@@ -180,6 +191,12 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             state = MovementState.air;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            state = MovementState.attack;
+            moveSpeed = 2;
         }
     }
 

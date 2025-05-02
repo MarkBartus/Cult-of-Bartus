@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Enemy
 {
@@ -9,7 +10,7 @@ namespace Enemy
         public float chaseTimer;
 
         public float direction;
-
+        
         // constructor
         public AttackState(AiAgent enemy, StateMachine sm) : base(enemy, sm)
         {
@@ -18,9 +19,10 @@ namespace Enemy
         public override void Enter()
         {
             Debug.Log("chase");
-            chaseTimer = 5;
-            enemy.nav.speed = 5f;            
-            enemy.aggressive = true;
+            chaseTimer = 3;
+            enemy.nav.speed = 8f;            
+            
+            
             base.Enter();
         }
 
@@ -38,15 +40,24 @@ namespace Enemy
         {
             base.LogicUpdate();
 
+            enemy.CheckForInSight();
+
             chaseTimer -= Time.deltaTime;
-            if (chaseTimer <= 0)
+            if (chaseTimer <= 0 & enemy.sensor.Objects.Count <= 0)
             {
-                enemy.CheckForMovement();
-                enemy.CheckForPlayer();
+                sm.ChangeState(enemy.walkState);
+                
+            }
+            else if (chaseTimer <= 0 & enemy.sensor.Objects.Count > 0)
+            {
+                chaseTimer = 3;
             }
 
+            enemy.FaceTarget();
+            enemy.nav.SetDestination(enemy.player.transform.position);
+            enemy.anim.Play("running");
 
-            enemy.nav.destination = enemy.playerPos.position;
+            enemy.CheckForInSight();
         }
 
         public override void PhysicsUpdate()

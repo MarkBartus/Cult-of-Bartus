@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Enemy
 {
@@ -19,14 +20,29 @@ namespace Enemy
 
         public float speed;
 
+        [Header("Combat")]
+        [SerializeField] float attackRange = 1f;
+        public float WeaponDamage = 1f;
+
+        float timePassed;
+
+
+
+        public GameObject player;
+        public Transform target;
+
+        public GameObject sight;
+
         public Transform[] points;
         public int desPoint;
 
         // variables holding the different states
         public EnemyAi sensor;
+        public HealthSystem healthSystem;
         public WalkState walkState;
         public AttackState attackState;
         public DelayState delayState;
+        public InSIghtState inSightState;
         public StateMachine sm;
 
         public float direction;
@@ -40,13 +56,17 @@ namespace Enemy
             sm = gameObject.AddComponent<StateMachine>();
             anim = GetComponent<Animator>();
             nav = GetComponent<NavMeshAgent>();
-
+            player = GameObject.FindWithTag("Player");
+            healthSystem = player.GetComponent<HealthSystem>();
             sensor = GetComponent<EnemyAi>();
+
+            Debug.Log(GameObject.FindWithTag("Player").name);
 
             // add new states here
             walkState = new WalkState(this, sm);
             attackState = new AttackState(this, sm);
             delayState = new DelayState(this, sm);
+            inSightState = new InSIghtState(this, sm);
 
             // initialise the statemachine with the default state
             sm.Init(walkState);
@@ -61,6 +81,28 @@ namespace Enemy
         void FixedUpdate()
         {
             sm.CurrentState.PhysicsUpdate();
+        }
+
+        public void CheckForInSight()
+        {
+         if (Vector3.Distance(player.transform.position, sight.transform.position) <= attackRange)
+         {
+
+            sm.ChangeState(inSightState);     
+         }          
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(sight.transform.position, attackRange);
+        }
+
+        public void FaceTarget()
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5);
         }
 
         public void CheckForMovement()
@@ -80,8 +122,6 @@ namespace Enemy
             {
                 //change to the delay state
                 sm.ChangeState(delayState, attackState);
-
-
             }
 
            
@@ -106,5 +146,6 @@ namespace Enemy
                 //SceneManager.LoadScene(0);
             }
         }
+
     }
 }
