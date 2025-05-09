@@ -1,3 +1,6 @@
+using Enemy;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -37,15 +40,28 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Refrences")]
     public Climbing climbingScript;
-    
-    public Transform orientation;
 
+    [Header("Combat")]
+    public GameObject enemy;
+    public float range = 1;
+    public float dmg;
+    public bool acd = false;
+    public HealthSystem ehealthSystem;
+    public HealthSystem healthSystem;
+    public GameObject checkSphere;
+    public LayerMask enemyMask;
+
+    public Transform orientation;
+    public Animator anim;
     float horizontalInput;
     float verticalInput;
+    public GameObject sS;
 
     Vector3 moveDirection;
 
     Rigidbody rb;
+
+    List<GameObject> hasDealtDamage;
 
     public MovementState state;
     public enum MovementState
@@ -57,7 +73,8 @@ public class PlayerMovement : MonoBehaviour
         climbing,
         crouching,
         air,
-        attack
+        attack,
+        block
     }
 
     public bool freeze;
@@ -66,17 +83,26 @@ public class PlayerMovement : MonoBehaviour
 
     public bool restricted;
 
+    public bool attacking = false;
+    public bool blocking = false;
+    private float time = 1;
+
     private void Start()
     {
-       rb = GetComponent<Rigidbody>(); 
-       rb.freezeRotation = true;
+        healthSystem = GetComponent<HealthSystem>();
+        ehealthSystem = enemy.GetComponent<HealthSystem>();
+        anim.GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
 
         startYScale = transform.localScale.y;
+
+        hasDealtDamage = new List<GameObject>();
     }
 
     private void Update()
     {
-
+        
         //ground check
         float play = playerHeight * 0.5f + 0.2f;
         grounded = Physics.Raycast(transform.position, Vector3.down, play, whatIsGround);
@@ -85,6 +111,12 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        Blocking();
+        if (attacking == false && blocking == false)
+        {
+            Moving();
+        }
+        Attack();
 
         //drag
         if (grounded)
@@ -94,23 +126,34 @@ public class PlayerMovement : MonoBehaviour
 
         Debug.Log(moveSpeed);
 
-        if(state != MovementState.walking)
+        if (state != MovementState.walking)
         {
             Debug.Log(state);
         }
-    }
 
+        if (attacking == true || blocking == true)
+        {
+            time -= Time.deltaTime;
+            if (time <= 0)
+            {
+                attacking = false;
+                blocking = false;
+                acd = false;
+                time = 1;
+            }
+        }
+    }
     private void FixedUpdate()
     {
         MovePlayer();
     }
-
+    
     private void MyInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
-
-        if(Input.GetKey(jumpKey) && readyToJump && grounded)
+ 
+        if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
 
@@ -132,15 +175,90 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && grounded)
-        {
-            Attacking();
-        }
-    }
 
-    public void Attacking()
+    }
+    
+    private void Attack()
     {
 
+        RaycastHit hit;
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            attacking = true;
+            anim.Play("punching");
+
+            int layerMsk = 1 << 9;
+            if (Physics.SphereCast(sS.transform.position,range,transform.forward , out hit, layerMsk))
+            {
+                Debug.Log("hitt");
+
+                if (hit.transform.TryGetComponent(out AiAgent enemy) && acd == false && Physics.CheckSphere(checkSphere.transform.position, 1.5f, enemyMask))
+                {
+                    enemy.TakeDamage(1);               
+                    hasDealtDamage.Add(hit.transform.gameObject);
+                    acd = true;
+                }
+
+            }
+        }
+    }
+    public void StartDealDamage()
+    {
+        hasDealtDamage.Clear();
+    }
+    private void Blocking()
+    {
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            anim.Play("block");
+            blocking = true;
+        }
+
+    }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position,range);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(sS.transform.position,range);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(checkSphere.transform.position, 1.5f);
+    }
+
+    public void Moving()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                anim.Play("running");
+            }
+        }
+        else if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.Play("walking");
+        }
+        else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.Play("walking");
+        }
+        else if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.Play("walking");
+        }
+        else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.Play("walking");
+        }
+        else
+        {
+            anim.Play("Idle");
+        }
     }
 
     private void StateHandler()
@@ -196,6 +314,12 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             state = MovementState.attack;
+            moveSpeed = 2;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            state = MovementState.block;
             moveSpeed = 2;
         }
     }

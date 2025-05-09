@@ -31,6 +31,17 @@ public class HealthSystem : MonoBehaviour
             Die();
         }
     }
+    public void eTakeDamage(float damageAmount)
+    {
+        currentHealth -= damageAmount;
+        //healthBar.SetHealth(currentHealth);
+
+
+        if (currentHealth <= 0)
+        {
+            eDie();
+        }
+    }
 
     public void use()
     {
@@ -41,7 +52,11 @@ public class HealthSystem : MonoBehaviour
             healthBar.SetHealth(currentHealth);
         }
     }
-
+    void eDie()
+    {
+        //anim.SetTrigger("dead");
+        Destroy(this.gameObject);
+    }
     void Die()
     {
         //anim.SetTrigger("dead");

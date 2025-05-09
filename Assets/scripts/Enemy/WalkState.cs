@@ -21,7 +21,7 @@ namespace Enemy
             Debug.Log("walk");           
             enemy.nav.speed = 3.5f;
             enemy.aggressive = false;
-            
+            enemy.ascB.SetActive(false);
         }
 
         public override void Exit()
@@ -39,6 +39,8 @@ namespace Enemy
             base.LogicUpdate();
             enemy.CheckForIdle();
             enemy.CheckForPlayer();
+            enemy.CheckForAsc();
+            
         }
 
         public override void PhysicsUpdate()

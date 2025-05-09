@@ -35,8 +35,10 @@ namespace Enemy
 
         public override void LogicUpdate()
         {
-            Debug.Log("timer delay=" + timer);
+            //Debug.Log("timer delay=" + timer);
             base.LogicUpdate();
+
+            
 
             timer -= Time.deltaTime;
             if (timer <= 0 & enemy.sensor.Objects.Count > 0)

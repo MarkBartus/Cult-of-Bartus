@@ -23,15 +23,20 @@ namespace Enemy
         [Header("Combat")]
         [SerializeField] float attackRange = 1f;
         public float WeaponDamage = 1f;
+        public float ascRange = 1f;
 
         float timePassed;
 
-
+        [Header("health")]
+        [SerializeField] float health = 3;
+        public float currentHealth;
+        public enemyHealhBar enemyhealhBar;
 
         public GameObject player;
         public Transform target;
 
         public GameObject sight;
+        public GameObject ascR;
 
         public Transform[] points;
         public int desPoint;
@@ -39,20 +44,28 @@ namespace Enemy
         // variables holding the different states
         public EnemyAi sensor;
         public HealthSystem healthSystem;
+        public PlayerMovement playerMovement;
+        public HealthSystem ehealthSystem;
         public WalkState walkState;
         public AttackState attackState;
         public DelayState delayState;
         public InSIghtState inSightState;
+        public Assassination asc;
         public StateMachine sm;
 
         public float direction;
         public bool aggressive;
         private float timer = 2f;
         public Transform playerPos;
+        public GameObject ascB;
+
+        
 
         // Start is called before the first frame update
         void Start()
         {
+            playerMovement = player.GetComponent<PlayerMovement>();
+            ehealthSystem = GetComponent<HealthSystem>();
             sm = gameObject.AddComponent<StateMachine>();
             anim = GetComponent<Animator>();
             nav = GetComponent<NavMeshAgent>();
@@ -67,20 +80,62 @@ namespace Enemy
             attackState = new AttackState(this, sm);
             delayState = new DelayState(this, sm);
             inSightState = new InSIghtState(this, sm);
+            asc = new Assassination(this, sm);
 
             // initialise the statemachine with the default state
             sm.Init(walkState);
+
+            ascB.SetActive(false);
+
+            currentHealth = health;
+            //enemyhealhBar.SetHealth(currentHealth);
         }
 
         // Update is called once per frame
         public void Update()
         {
             sm.CurrentState.LogicUpdate();
+
+            
+        }
+
+        public void TakeDamage(float damageAmount)
+        {
+            currentHealth -= damageAmount;
+            playerMovement.StartDealDamage();
+            //enemyhealhBar.SetHealth(currentHealth);
+
+            //anim.SetTrigger("damage");
+
+
+            if (currentHealth <= 0)
+            {
+
+                Destroy(this.gameObject);
+            }
+
         }
 
         void FixedUpdate()
         {
             sm.CurrentState.PhysicsUpdate();
+        }
+        public void CheckForAsc()
+        {
+            if (Vector3.Distance(player.transform.position, ascR.transform.position) <= ascRange && sensor.Objects.Count <= 0)
+            {
+                Debug.Log("asc");
+                ascB.SetActive(true);
+                if(Input.GetKey(KeyCode.E))
+                {
+                    ascB.SetActive(false);
+                    Destroy(this.gameObject);
+                }
+            }
+            else
+            {
+                ascB.SetActive(false);
+            }
         }
 
         public void CheckForInSight()
@@ -96,6 +151,8 @@ namespace Enemy
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(sight.transform.position, attackRange);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(ascR.transform.position, ascRange);
         }
 
         public void FaceTarget()

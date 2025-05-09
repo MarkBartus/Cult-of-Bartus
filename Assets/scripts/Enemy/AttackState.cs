@@ -20,9 +20,9 @@ namespace Enemy
         {
             Debug.Log("chase");
             chaseTimer = 3;
-            enemy.nav.speed = 8f;            
-            
-            
+            enemy.nav.speed = 8f;
+            enemy.ascB.SetActive(false);
+
             base.Enter();
         }
 
@@ -41,6 +41,7 @@ namespace Enemy
             base.LogicUpdate();
 
             enemy.CheckForInSight();
+            
 
             chaseTimer -= Time.deltaTime;
             if (chaseTimer <= 0 & enemy.sensor.Objects.Count <= 0)

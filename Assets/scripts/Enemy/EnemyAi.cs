@@ -5,7 +5,7 @@ public class EnemyAi : MonoBehaviour
 {
     public float distance = 10;
     public float angle = 30;
-    public float height = 1.0f;
+    public float height = 1f;
     public Color meshColor = Color.red;
     public int scanFrequency = 30;
     public LayerMask layers;
