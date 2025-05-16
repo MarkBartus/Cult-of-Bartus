@@ -8,6 +8,8 @@ public class Currency : MonoBehaviour
 {
     public static Currency Instance { get; private set; }
 
+    public PlayerMovement PM;
+
     void Awake()
     {
         if (Instance == null) { Instance = this; } else if (Instance != this) { Destroy(this); }
@@ -27,19 +29,19 @@ public class Currency : MonoBehaviour
 
     public int currentAmount;
 
-
+    public int damages = 1;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        PM = GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
         currency.text = gold.ToString();
-        hpPotions.text = hp.ToString();
+        //hpPotions.text = hp.ToString();
         counter.text = currentAmount.ToString();
 
         if (hp > 3)
@@ -65,6 +67,16 @@ public class Currency : MonoBehaviour
         {
             hp += 1;
             gold -= 100;
+        }
+
+    }
+    public void BuyDamage()
+    {
+        if (gold >= 300 && damages >=4)
+        {
+            PM.damageAmount++;
+            damages += 1;
+            gold -= 300;
         }
 
     }

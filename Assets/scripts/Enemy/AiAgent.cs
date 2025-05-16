@@ -50,7 +50,9 @@ namespace Enemy
         public AttackState attackState;
         public DelayState delayState;
         public InSIghtState inSightState;
+        public guardState guardstate;
         public Assassination asc;
+        public guardWalkState guardwalkstate;
         public StateMachine sm;
 
         public float direction;
@@ -58,9 +60,9 @@ namespace Enemy
         private float timer = 2f;
         public Transform playerPos;
         public GameObject ascB;
+        public bool guardActive = false;
 
-        
-
+        public Transform guard;
         // Start is called before the first frame update
         void Start()
         {
@@ -81,6 +83,8 @@ namespace Enemy
             delayState = new DelayState(this, sm);
             inSightState = new InSIghtState(this, sm);
             asc = new Assassination(this, sm);
+            guardstate = new guardState(this, sm);
+            guardwalkstate = new guardWalkState(this, sm);
 
             // initialise the statemachine with the default state
             sm.Init(walkState);
@@ -98,6 +102,15 @@ namespace Enemy
 
             
         }
+        public void guardStateCheck()
+        {
+            if(guardActive == true)
+            {
+                sm.ChangeState(guardstate);
+            }
+        }
+            
+
 
         public void TakeDamage(float damageAmount)
         {

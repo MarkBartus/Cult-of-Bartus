@@ -2,6 +2,7 @@ using Enemy;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject enemy;
     public float range = 1;
     public float dmg;
+    public float damageAmount = 1f;
     public bool acd = false;
     public HealthSystem ehealthSystem;
     public HealthSystem healthSystem;
@@ -195,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (hit.transform.TryGetComponent(out AiAgent enemy) && acd == false && Physics.CheckSphere(checkSphere.transform.position, 1.5f, enemyMask))
                 {
-                    enemy.TakeDamage(1);               
+                    enemy.TakeDamage(damageAmount);               
                     hasDealtDamage.Add(hit.transform.gameObject);
                     acd = true;
                 }

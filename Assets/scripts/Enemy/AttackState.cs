@@ -40,13 +40,23 @@ namespace Enemy
         {
             base.LogicUpdate();
 
+            
+
             enemy.CheckForInSight();
             
 
             chaseTimer -= Time.deltaTime;
             if (chaseTimer <= 0 & enemy.sensor.Objects.Count <= 0)
             {
-                sm.ChangeState(enemy.walkState);
+
+                if (enemy.guardActive == true)
+                {
+                    enemy.sm.ChangeState(enemy.guardwalkstate);
+                }
+                else
+                {
+                    sm.ChangeState(enemy.walkState);
+                }
                 
             }
             else if (chaseTimer <= 0 & enemy.sensor.Objects.Count > 0)

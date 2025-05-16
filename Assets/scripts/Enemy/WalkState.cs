@@ -40,7 +40,10 @@ namespace Enemy
             enemy.CheckForIdle();
             enemy.CheckForPlayer();
             enemy.CheckForAsc();
-            
+            if (enemy.guardActive == true)
+            {
+                enemy.sm.ChangeState(enemy.guardwalkstate);
+            }
         }
 
         public override void PhysicsUpdate()
@@ -48,6 +51,7 @@ namespace Enemy
             base.PhysicsUpdate();
 
             // Move
+            
 
             if (!enemy.nav.pathPending && enemy.nav.remainingDistance < 0.5f)
             {

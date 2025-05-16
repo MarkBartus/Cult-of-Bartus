@@ -41,6 +41,8 @@ namespace Enemy
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+           
             
             enemy.FaceTarget();
             
