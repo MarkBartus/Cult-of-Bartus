@@ -13,8 +13,20 @@ PrefabInstance:
       value: Guarding
       objectReference: {fileID: 0}
     - target: {fileID: 4943717199697419291, guid: 932cf27f14d93b44f831fab1a14f2750, type: 3}
+      propertyPath: health
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943717199697419291, guid: 932cf27f14d93b44f831fab1a14f2750, type: 3}
+      propertyPath: reward
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943717199697419291, guid: 932cf27f14d93b44f831fab1a14f2750, type: 3}
       propertyPath: guardActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943717199697419291, guid: 932cf27f14d93b44f831fab1a14f2750, type: 3}
+      propertyPath: WeaponDamage
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6614621165819312902, guid: 932cf27f14d93b44f831fab1a14f2750, type: 3}
       propertyPath: m_LocalPosition.x

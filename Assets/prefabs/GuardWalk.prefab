@@ -79,6 +79,9 @@ MonoBehaviour:
   aggressive: 0
   playerPos: {fileID: 0}
   ascB: {fileID: 0}
+  guardActive: 0
+  guard: {fileID: 0}
+  reward: 100
 --- !u!114 &2372823748791288112
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject enemy;
     public float range = 1;
     public float dmg;
-    public float damageAmount = 1f;
+    public float damageAmount;
     public bool acd = false;
     public HealthSystem ehealthSystem;
     public HealthSystem healthSystem;
@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        
+        damageAmount = Currency.Instance.damages;
         //ground check
         float play = playerHeight * 0.5f + 0.2f;
         grounded = Physics.Raycast(transform.position, Vector3.down, play, whatIsGround);

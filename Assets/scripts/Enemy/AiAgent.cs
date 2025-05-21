@@ -31,6 +31,7 @@ namespace Enemy
         [SerializeField] float health = 3;
         public float currentHealth;
         public enemyHealhBar enemyhealhBar;
+        public bool boss;
 
         public GameObject player;
         public Transform target;
@@ -54,15 +55,18 @@ namespace Enemy
         public Assassination asc;
         public guardWalkState guardwalkstate;
         public StateMachine sm;
+        public bossQuest bossquest;
 
         public float direction;
         public bool aggressive;
         private float timer = 2f;
-        public Transform playerPos;
+        public GameObject playerPos;
         public GameObject ascB;
         public bool guardActive = false;
 
         public Transform guard;
+
+        public int reward;
         // Start is called before the first frame update
         void Start()
         {
@@ -74,7 +78,8 @@ namespace Enemy
             player = GameObject.FindWithTag("Player");
             healthSystem = player.GetComponent<HealthSystem>();
             sensor = GetComponent<EnemyAi>();
-
+            
+            playerPos = GameObject.FindWithTag("Player");
             Debug.Log(GameObject.FindWithTag("Player").name);
 
             // add new states here
@@ -123,8 +128,19 @@ namespace Enemy
 
             if (currentHealth <= 0)
             {
+                
+                if (boss==true)
+                {
+                    bossquest.bossKilled = true;
+                    Currency.Instance.gold += reward;
+                    Destroy(this.gameObject);
+                }
+                else
+                {
+                    Currency.Instance.gold += reward;
+                    Destroy(this.gameObject);
+                }
 
-                Destroy(this.gameObject);
             }
 
         }

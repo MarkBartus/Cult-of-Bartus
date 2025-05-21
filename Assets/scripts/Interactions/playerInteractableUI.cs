@@ -5,10 +5,13 @@ public class playerInteractableUI : MonoBehaviour
 {
     [SerializeField] private GameObject containerGameObject;
     [SerializeField] private PlayerIneract playerInteract;
-    [SerializeField] private TextMeshProUGUI interactTextMeshProUGUI;
+    //[SerializeField] private TextMeshProUGUI interactTextMeshProUGUI;
 
     [SerializeField] private GameObject containerGameObject1;
-    [SerializeField] private TextMeshProUGUI interactTextMeshProUGUI1;
+    //[SerializeField] private TextMeshProUGUI interactTextMeshProUGUI1;
+    private NPCInteractable npcInteractable;
+    private NPCInteractable2 npcInteractable2;
+
 
     private void Update()
     {
@@ -33,22 +36,26 @@ public class playerInteractableUI : MonoBehaviour
     private void show(NPCInteractable npcInteractable)
     {
         containerGameObject.SetActive(true);
-        interactTextMeshProUGUI.text = npcInteractable.GetInteractText();
+        //interactTextMeshProUGUI.text = npcInteractable.GetInteractText();
+        
     }
 
     private void show2(NPCInteractable2 npcInteractable2)
     {
         containerGameObject1.SetActive(true);
-        interactTextMeshProUGUI1.text = npcInteractable2.GetInteractText();
+        //interactTextMeshProUGUI1.text = npcInteractable2.GetInteractText();
+       
     }
 
     private void Hide()
     {
         containerGameObject.SetActive(false);
+        
     }
     private void Hide1()
     {
         containerGameObject1.SetActive(false);
+        
     }
     public void decline()
     {

@@ -42,7 +42,7 @@ public class Currency : MonoBehaviour
     {
         currency.text = gold.ToString();
         //hpPotions.text = hp.ToString();
-        counter.text = currentAmount.ToString();
+        //counter.text = currentAmount.ToString();
 
         if (hp > 3)
         {
@@ -72,9 +72,9 @@ public class Currency : MonoBehaviour
     }
     public void BuyDamage()
     {
-        if (gold >= 300 && damages >=4)
+        if (gold >= 300 && damages <=3)
         {
-            PM.damageAmount++;
+            //PM.damageAmount += 1;
             damages += 1;
             gold -= 300;
         }

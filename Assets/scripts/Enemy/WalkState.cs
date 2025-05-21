@@ -51,21 +51,34 @@ namespace Enemy
             base.PhysicsUpdate();
 
             // Move
-            
+            /*
 
             if (!enemy.nav.pathPending && enemy.nav.remainingDistance < 0.5f)
             {
                 if (enemy.points.Length == 0)
                 {
+                    enemy.anim.Play("walk");
                     return;
                 }
                 Debug.Log("finding path");
                 enemy.anim.Play("walk");
+
                 enemy.nav.destination = enemy.points[enemy.desPoint].position;
                 enemy.desPoint = (enemy.desPoint + 1) % enemy.points.Length;
                 
             }
+            */
+            if (!enemy.nav.pathPending && enemy.nav.remainingDistance < 0.5f)
+            {
+                if (enemy.points.Length == 0) return;
 
+                Debug.Log("finding path");
+                enemy.anim.Play("walk");
+
+                int randomIndex = Random.Range(0, enemy.points.Length); // Pick a random point
+                enemy.nav.SetDestination(enemy.points[randomIndex].position);
+
+            }
         }
     }
 }
