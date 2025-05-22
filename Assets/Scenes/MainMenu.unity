@@ -3856,7 +3856,7 @@ MonoBehaviour:
   game: {fileID: 0}
   Button: {fileID: 8300000, guid: 180c8fdc3547d684c960823a7249cd86, type: 3}
   playS: {fileID: 0}
-  footsteps: {fileID: 0}
+  footsteps: {fileID: 8300000, guid: da0fa3f4dcbce5f42a7acb52e952831b, type: 3}
 --- !u!4 &1025446688
 Transform:
   m_ObjectHideFlags: 0

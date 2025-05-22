@@ -20,6 +20,11 @@ public class HealthSystem : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    public void Scene()
+    {
+        
+    }
+
     public void TakeDamage(float damageAmount)
     {
         currentHealth -= damageAmount;
@@ -59,9 +64,11 @@ public class HealthSystem : MonoBehaviour
     }
     void Die()
     {
-        //anim.SetTrigger("dead");
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+
+
+        SceneManager.LoadScene(0);
+        //SceneManager.LoadScene(0);
+
     }
     public void HitVFX(Vector3 hitPosition)
     {

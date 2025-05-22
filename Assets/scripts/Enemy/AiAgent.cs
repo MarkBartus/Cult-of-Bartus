@@ -59,7 +59,7 @@ namespace Enemy
 
         public float direction;
         public bool aggressive;
-        private float timer = 2f;
+        //private float timer = 2f;
         public GameObject playerPos;
         public GameObject ascB;
         public bool guardActive = false;

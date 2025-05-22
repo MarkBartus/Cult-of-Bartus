@@ -78,6 +78,7 @@ namespace Enemy
                 int randomIndex = Random.Range(0, enemy.points.Length); // Pick a random point
                 enemy.nav.SetDestination(enemy.points[randomIndex].position);
 
+                enemy.anim.Play("walk");
             }
         }
     }

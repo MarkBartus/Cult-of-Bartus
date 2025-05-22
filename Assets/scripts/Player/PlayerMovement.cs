@@ -65,6 +65,8 @@ public class PlayerMovement : MonoBehaviour
 
     List<GameObject> hasDealtDamage;
 
+    //AudioManager audioManager;
+
     public MovementState state;
     public enum MovementState
     {
@@ -100,6 +102,8 @@ public class PlayerMovement : MonoBehaviour
         startYScale = transform.localScale.y;
 
         hasDealtDamage = new List<GameObject>();
+
+        //audioManager = GameObject.FindWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Update()

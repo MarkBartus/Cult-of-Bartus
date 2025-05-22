@@ -12,8 +12,12 @@ public class Currency : MonoBehaviour
 
     void Awake()
     {
+
         if (Instance == null) { Instance = this; } else if (Instance != this) { Destroy(this); }
-        DontDestroyOnLoad(gameObject);
+        else
+        {
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     public int gold;
