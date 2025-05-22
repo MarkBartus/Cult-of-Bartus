@@ -14,7 +14,7 @@ public class VolumeSetting : MonoBehaviour
     [SerializeField] private Slider masSlider;
     
     bool isMuted;
-
+    
     public static VolumeSetting instance;
 
 /*
@@ -31,10 +31,10 @@ public class VolumeSetting : MonoBehaviour
         }
     }
 */
-    public void muteToggle(bool muted)
+    public void muteToggle(Toggle muted)
     {
         
-        if ( muted)
+        if ( muted.isOn)
         {
             myMixer.SetFloat("Music", -80);
             isMuted = true;
