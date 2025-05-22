@@ -133,7 +133,7 @@ namespace Enemy
                 {
                     bossquest.bossKilled = true;
                     Currency.Instance.gold += reward;
-                    Destroy(this.gameObject);
+                    //Destroy(this.gameObject);
                 }
                 else
                 {

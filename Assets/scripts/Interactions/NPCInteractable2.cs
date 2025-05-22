@@ -18,6 +18,7 @@ public class NPCInteractable2 : MonoBehaviour
         Time.timeScale = 0;
         isInteractable1 = true;
     }
+    
     public void Update()
     {
         inter();
@@ -39,6 +40,7 @@ public class NPCInteractable2 : MonoBehaviour
     {
         isInteractable1 = false;
     }
+    
     public string GetInteractText()
     {
         return interactText;

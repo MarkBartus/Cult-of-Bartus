@@ -4,7 +4,9 @@ using UnityEngine;
 public class bossQuest : MonoBehaviour
 {
     public GameObject rewardWindow;
+    public GameObject questWindow;
     public bool bossKilled = false;
+    public GameObject boss;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,17 +16,17 @@ public class bossQuest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (bossKilled == true)
+        {
+            Destroy(boss);
+        }
     }
     public void bossDead()
     {
         if(bossKilled == true)
         {
             rewardWindow.SetActive(true);
-        }
-        else
-        {
-            return;
+            questWindow.SetActive(false);
         }
     }
 }
