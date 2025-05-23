@@ -157,6 +157,7 @@ namespace Enemy
                 ascB.SetActive(true);
                 if(Input.GetKey(KeyCode.E))
                 {
+                    Currency.Instance.gold += reward;
                     ascB.SetActive(false);
                     Destroy(this.gameObject);
                 }
