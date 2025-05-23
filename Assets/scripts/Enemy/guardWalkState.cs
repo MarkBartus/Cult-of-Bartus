@@ -40,6 +40,7 @@ namespace Enemy
 
             enemy.nav.SetDestination(enemy.guard.transform.position);
             Debug.Log("guardingWalk");
+            Debug.Log(enemy.anim);
             enemy.anim.Play("walk");
             if (!enemy.nav.pathPending && enemy.nav.remainingDistance < 0.5f)
             {
